@@ -1,10 +1,10 @@
 import Foundation
 
 enum AppConstants {
-    /// Replace these identifiers before signing the project for distribution.
-    static let appGroupIdentifier = "JZH2954S3D.com.example.CountdownTasks"
-    static let appBundleIdentifier = "com.example.Tickday"
-    static let widgetBundleIdentifier = "com.example.Tickday.Widget"
+    /// The app group is prefixed with the Apple Developer Team ID and must match both .entitlements files.
+    static let appGroupIdentifier = "JZH2954S3D.com.sharbelmarshi.Tickday"
+    static let appBundleIdentifier = "com.sharbelmarshi.Tickday"
+    static let widgetBundleIdentifier = "com.sharbelmarshi.Tickday.Widget"
     static let widgetKind = "TickdayDashboardWidget"
     static let urlScheme = "tickday"
     static let sharedStoreName = "Tickday.store"

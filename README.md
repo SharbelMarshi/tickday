@@ -22,7 +22,7 @@ Tickday is a native, offline macOS 14+ personal dashboard written in SwiftUI. It
 
 ## Data storage
 
-All data lives in one SwiftData (SQLite) store inside the Tickday App Group container — the only channel a sandboxed widget can share with its app. Users never configure anything: macOS creates the container automatically when the app is signed correctly. Before distributing, replace the `com.example` identifiers in `Tickday/Utilities/AppConstants.swift`, both `.entitlements` files, and the target build settings with your own bundle IDs and a Team ID–prefixed app group.
+All data lives in one SwiftData (SQLite) store inside the Tickday App Group container (`JZH2954S3D.com.sharbelmarshi.Tickday`) — the only channel a sandboxed widget can share with its app. Users never configure anything: macOS creates the container automatically when the app is signed correctly. The identifiers are defined in `Tickday/Utilities/AppConstants.swift` and must stay in sync with both `.entitlements` files and the target build settings.
 
 ## Building and testing
 
@@ -38,3 +38,5 @@ xcodebuild -project Tickday.xcodeproj -scheme Tickday -configuration Release \
   SYMROOT="$PWD/dist/build" build
 ditto -c -k --keepParent dist/build/Release/Tickday.app dist/Tickday-1.0.zip
 ```
+
+Development-signed builds run only on this Mac. For public releases, re-sign with a Developer ID Application certificate and notarize (requires a paid Apple Developer membership). Until then, testers must approve downloaded copies once in System Settings → Privacy & Security → "Open Anyway".
