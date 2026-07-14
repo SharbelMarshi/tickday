@@ -7,7 +7,6 @@ struct TasksView: View {
     @State private var selectedOccurrenceID: String?
     @State private var search = ""
     @State private var isSearching = false
-    @FocusState private var searchFieldFocused: Bool
     @State private var filter: TaskCompletionFilter = .all
     @AppStorage("tasks.hideCompleted") private var hideCompleted = false
     @State private var showingEditor = false
@@ -28,12 +27,15 @@ struct TasksView: View {
     @ToolbarContentBuilder
     private var toolbarItems: some ToolbarContent {
         if isSearching {
-            ToolbarItem { searchField }
+            ToolbarItem {
+                ToolbarSearchField(prompt: "Search tasks", text: $search, close: closeSearch)
+            }
         } else {
             ToolbarItemGroup {
                 Button { shiftDay(-1) } label: { Image(systemName: "chevron.left") }
                     .accessibilityLabel("Previous day")
                 DatePicker("Date", selection: selectedDateBinding, displayedComponents: .date)
+                    .datePickerStyle(.field)
                     .labelsHidden()
                     .fixedSize()
                 Button { shiftDay(1) } label: { Image(systemName: "chevron.right") }
@@ -52,24 +54,6 @@ struct TasksView: View {
         ToolbarItem {
             Button { newItem() } label: { Label("New Task", systemImage: "plus") }
         }
-    }
-
-    private var searchField: some View {
-        HStack(spacing: 5) {
-            Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
-            TextField("Search tasks", text: $search)
-                .textFieldStyle(.plain)
-                .frame(width: 180)
-                .focused($searchFieldFocused)
-                .onAppear { searchFieldFocused = true }
-            Button { closeSearch() } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary) }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Close search")
-        }
-        .padding(.vertical, 3)
-        .padding(.horizontal, 8)
-        .background(.quinary, in: RoundedRectangle(cornerRadius: 7))
-        .onExitCommand { closeSearch() }
     }
 
     private func shiftDay(_ delta: Int) {

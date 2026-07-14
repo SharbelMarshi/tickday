@@ -5,6 +5,7 @@ struct CountdownsView: View {
     @State private var events: [CountdownEvent] = []
     @State private var selected: CountdownEvent?
     @State private var search = ""
+    @State private var isSearching = false
     @State private var sort: CountdownSort = .custom
     @State private var editorEvent: CountdownEvent?
     @State private var showingEditor = false
@@ -36,9 +37,18 @@ struct CountdownsView: View {
             }
         }
         .navigationTitle("Countdowns")
-        .searchable(text: $search, prompt: "Search countdowns")
         .toolbar {
-            ToolbarItem { Picker("Sort", selection: $sort) { ForEach(CountdownSort.allCases) { Text($0.title).tag($0) } }.fixedSize() }
+            if isSearching {
+                ToolbarItem {
+                    ToolbarSearchField(prompt: "Search countdowns", text: $search, close: closeSearch)
+                }
+            } else {
+                ToolbarItemGroup {
+                    Picker("Sort", selection: $sort) { ForEach(CountdownSort.allCases) { Text($0.title).tag($0) } }.fixedSize()
+                    Button { isSearching = true } label: { Label("Search", systemImage: "magnifyingglass") }
+                        .accessibilityLabel("Search countdowns")
+                }
+            }
             ToolbarItem { Button { newItem() } label: { Label("New Countdown", systemImage: "plus") } }
         }
         .sheet(isPresented: $showingEditor, onDismiss: load) { CountdownEditorView(event: editorEvent) }
@@ -58,6 +68,7 @@ struct CountdownsView: View {
     }
 
     private func newItem() { editorEvent = nil; showingEditor = true }
+    private func closeSearch() { search = ""; isSearching = false }
     private func edit(_ event: CountdownEvent) { editorEvent = event; showingEditor = true }
     private func duplicate(_ event: CountdownEvent) { perform { try environment.countdowns.duplicate(event) } }
     private func load() {
